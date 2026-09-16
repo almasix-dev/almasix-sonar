@@ -35,16 +35,16 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/almasix-dev/sonar.git"
+    "url": "https://github.com/almasix-dev/almasix-sonar.git"
   },
   "devDependencies": {
     "typescript": "^5.8.2",
     "vitest": "^3.0.9"
   },
   "bugs": {
-    "url": "https://github.com/almasix-dev/sonar/issues"
+    "url": "https://github.com/almasix-dev/almasix-sonar/issues"
   },
-  "homepage": "https://github.com/almasix-dev/sonar#readme",
+  "homepage": "https://github.com/almasix-dev/almasix-sonar#readme",
   "publishConfig": {
     "access": "public"
   }
