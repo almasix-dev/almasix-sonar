@@ -4,8 +4,7 @@ First-party browser client for **Sonar**, Almasix's native realtime websocket
 server (`/broadcasting/socket`). Speaks the `almasix:*` frame protocol the
 server uses today. **Does not require `pusher-js`.**
 
-Framework docs:
-[Broadcasting](https://almasix-dev.github.io/almasix/broadcasting/).
+Docs: [Broadcasting](https://docs.almasix.com/broadcasting/).
 
 ## Install
 
@@ -13,54 +12,48 @@ Framework docs:
 npm install @almasix/sonar
 ```
 
-## Develop
-
-```bash
-npm install
-npm run build
-npm test
-```
+Requires Node.js **≥ 22** (browser bundles are fine on any modern browser).
 
 ## Quick start
 
 Point `BROADCAST_CONNECTION` at `websocket` or the `sonar` alias, then:
 
 ```js
-import Sonar from "@almasix/sonar";
+import Sonar from '@almasix/sonar';
 
 const sonar = new Sonar({
   // defaults: same host as the page, path /broadcasting/socket
-  // authEndpoint: "/broadcasting/auth",
+  // authEndpoint: '/broadcasting/auth',
 });
 
 await sonar.connect();
 
 // Public
-sonar.channel("announcements").listen("post.published", (data) => {
+sonar.channel('announcements').listen('post.published', (data) => {
   console.log(data);
 });
 
 // Private — POSTs /broadcasting/auth with credentials/cookies
-sonar.private(`authors.${name}`).listen("post.published", (data) => {
+sonar.private(`authors.${name}`).listen('post.published', (data) => {
   console.log(data);
 });
 
 // Presence
 sonar
-  .join("rooms.lobby")
+  .join('rooms.lobby')
   .here((members) => console.log(members))
-  .joining((member) => console.log("joined", member))
-  .leaving((member) => console.log("left", member));
+  .joining((member) => console.log('joined', member))
+  .leaving((member) => console.log('left', member));
 
 // Exclude this tab from broadcasts (server `to_others()`)
-fetch("/posts", {
-  method: "POST",
+fetch('/posts', {
+  method: 'POST',
   headers: {
-    "Content-Type": "application/json",
-    ...sonar.socketIdHeader(), // { "X-Socket-ID": "..." }
+    'Content-Type': 'application/json',
+    ...sonar.socketIdHeader(), // { 'X-Socket-ID': '...' }
   },
-  body: JSON.stringify({ title: "Hi" }),
-  credentials: "include",
+  body: JSON.stringify({ title: 'Hi' }),
+  credentials: 'include',
 });
 ```
 
@@ -86,23 +79,39 @@ Compatible with Almasix Sonar frames:
 Optional: inbound `pusher:*` system names are normalized to `almasix:*` if a
 relay ever speaks them; the default client always **sends** Sonar/`almasix` shapes.
 
-## Release / publish
+## Develop
 
-Cutting a release: create a GitHub Release on a `vX.Y.Z` tag. The
-[publish workflow](.github/workflows/publish.yml) builds, tests, publishes to
-npm as `@almasix/sonar`, and attaches the npm pack tarball to the Release.
+```bash
+npm install
+npm run build
+npm test
+```
 
-### Secrets (repo Settings → Secrets)
+## Publishing (maintainers)
 
-| Secret | Used for |
-| --- | --- |
-| `NPM_TOKEN` | npm Automation or Granular token with **publish** on scope `@almasix` |
+Releases use [Trusted Publishing](https://docs.npmjs.com/trusted-publishers/) — no `NPM_TOKEN` secret. CI authenticates with a short-lived OIDC token.
 
-Create the npm org `@almasix` (if missing) and grant the token publish rights
-before the first release. Do not commit tokens.
+**npmjs.com (one-time):** package **Settings → Trusted Publisher → GitHub Actions** with:
 
-Rehearse with **Actions → Publish → Run workflow** (`dry_run: true`) to build
-and test without `npm publish`.
+| Field | Value |
+|-------|--------|
+| Organization or user | `almasix-dev` |
+| Repository | `almasix-sonar` |
+| Workflow filename | `publish.yml` |
+| Environment | _(leave empty)_ |
+
+Enable **`npm publish`** under allowed actions.
+
+**Release:**
+
+```bash
+# Bump version in package.json so it matches the tag without "v"
+git tag v0.1.1
+git push origin main
+git push origin v0.1.1
+```
+
+Pushing `v*` runs [`.github/workflows/publish.yml`](.github/workflows/publish.yml) (build, test, `npm publish` via OIDC).
 
 ## Alternatives
 

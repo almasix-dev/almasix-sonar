@@ -4,6 +4,7 @@
   "description": "First-party browser client for Almasix Sonar realtime (native websocket server)",
   "license": "MIT",
   "type": "module",
+  "author": "Almasix",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -15,16 +16,17 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "vitest run",
     "typecheck": "tsc -p tsconfig.json --noEmit",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build && npm test"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
   "keywords": [
     "almasix",
@@ -35,11 +37,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/almasix-dev/almasix-sonar.git"
-  },
-  "devDependencies": {
-    "typescript": "^5.8.2",
-    "vitest": "^3.0.9"
+    "url": "git+https://github.com/almasix-dev/almasix-sonar.git"
   },
   "bugs": {
     "url": "https://github.com/almasix-dev/almasix-sonar/issues"
@@ -47,5 +45,10 @@
   "homepage": "https://github.com/almasix-dev/almasix-sonar#readme",
   "publishConfig": {
     "access": "public"
+  },
+  "sideEffects": false,
+  "devDependencies": {
+    "typescript": "^5.8.2",
+    "vitest": "^3.0.9"
   }
 }
